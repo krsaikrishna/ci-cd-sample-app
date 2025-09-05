@@ -31,7 +31,7 @@ pipeline {
         }
     }
     
-    stage('Deploy to EC2') {
+    stages('Deploy to EC2') {
         steps {
             sh """
             docker stop html-app || true
