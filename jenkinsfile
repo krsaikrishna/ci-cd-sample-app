@@ -2,14 +2,14 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_USER = 'your-dockerhub-username'
-        DOCKER_IMAGE = 'your-dockerhub-username/ci-cd-html'
+        DOCKERHUB_USER = 'krsaikrishna'
+        DOCKER_IMAGE = 'krsaikrishna/ci-cd-html'
     }
 
     stages {
         stage('Checkout Code') {
             steps {
-                git branch: 'main', url: 'https://github.com/your-username/ci-cd-html.git'
+                git branch: 'main', url: 'https://github.com/krsaikrishna/ci-cd-sample-app.git'
             }
         }
 
