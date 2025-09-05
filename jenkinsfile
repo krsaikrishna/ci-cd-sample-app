@@ -1,43 +1,34 @@
 pipeline {
-    agent any
+     agent any
 
     environment {
         DOCKERHUB_USER = 'krsaikrishna'
         DOCKER_IMAGE = 'krsaikrishna/ci-cd-html'
     }
-
+    
     stages {
         stage('Checkout Code') {
             steps {
                 git branch: 'main', url: 'https://github.com/krsaikrishna/ci-cd-sample-app.git'
             }
         }
-
-        stage('Build Docker Image') {
-            steps {
-                dir("${env.WORKSPACE}") {
+    } 
+    
+    stage('Build Docker Image') {
+        steps {
+            dir("${env.WORKSPACE}") {
                 sh 'docker buildx build -t $DOCKER_IMAGE:$BUILD_NUMBER . --load'
             }
         }
-
-        stage('Push to DockerHub') {
-            steps {
-                withCredentials([string(credentialsId: 'dockerhub-pass', variable: 'DOCKER_PASS')]) {
-                    sh "echo $DOCKER_PASS | docker login -u $DOCKERHUB_USER --password-stdin"
-                    sh "docker push $DOCKER_IMAGE:$BUILD_NUMBER"
-                }
-            }
-        }
-
-        stage('Deploy to EC2') {
-            steps {
-                sh """
-                docker stop html-app || true
-                docker rm html-app || true
-                docker run -d --name html-app -p 8082:80 $DOCKER_IMAGE:$BUILD_NUMBER
-                """
-            }
+    } 
+    
+    stage('Deploy to EC2') {
+        steps {
+            sh """
+            docker stop html-app || true
+            docker rm html-app || true
+            docker run -d --name html-app -p 8082:80 $DOCKER_IMAGE:$BUILD_NUMBER
+            """
         }
     }
 }
-
