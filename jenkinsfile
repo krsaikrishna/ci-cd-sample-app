@@ -20,7 +20,16 @@ pipeline {
                 sh 'docker buildx build -t $DOCKER_IMAGE:$BUILD_NUMBER . --load'
             }
         }
-    } 
+    }
+    
+    stage('Push to DockerHub') {
+        steps {
+            withCredentials([string(credentialsId: 'dockerhub-pass', variable: 'DOCKER_PASS')]) {
+                 sh "echo $DOCKER_PASS | docker login -u $DOCKERHUB_USER --password-stdin"
+                  sh "docker push $DOCKER_IMAGE:$BUILD_NUMBER"
+            }
+        }
+    }
     
     stage('Deploy to EC2') {
         steps {
