@@ -15,7 +15,8 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t $DOCKER_IMAGE:$BUILD_NUMBER .'
+                dir("${env.WORKSPACE}") {
+                sh 'docker buildx build -t $DOCKER_IMAGE:$BUILD_NUMBER . --load'
             }
         }
 
